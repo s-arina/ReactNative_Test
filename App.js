@@ -7,6 +7,9 @@ import {
   FlatList,
   TouchableOpacity,
   Button,
+  Alert,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import Practice from './components/Practice';
 import Header from './components/Header';
@@ -27,29 +30,41 @@ export default function App() {
   };
 
   const submitHandler = (text) => {
-    setTodos((prevTodos) => {
-      return [...prevTodos, { text: text, id: Math.random().toString() }];
-      // try uuid for key generating
-    });
+    if (text) {
+      setTodos((prevTodos) => {
+        return [...prevTodos, { text: text, id: Math.random().toString() }];
+        // try uuid for key generating
+      });
+    } else {
+      Alert.alert('Oops!', 'Task cannot be empty.', [
+        { text: 'OK', onPress: () => console.log('alert closed') },
+      ]);
+    }
   };
 
   console.log(todos);
   return (
-    <View style={styles.container}>
-      <StatusBar style='auto' />
-      <Header />
-      <View style={styles.content}>
-        <AddTodo submitHandler={submitHandler} />
-        <View style={styles.list}>
-          <FlatList
-            data={todos}
-            renderItem={({ item }) => (
-              <TodoItem item={item} pressHandler={pressHandler} />
-            )}
-          />
+    <TouchableWithoutFeedback // wrap code in this
+      onPress={() => {
+        Keyboard.dismiss(); // dismiss the keyboard when clicked elsewhere
+      }}
+    >
+      <View style={styles.container}>
+        <StatusBar style='auto' />
+        <Header />
+        <View style={styles.content}>
+          <AddTodo submitHandler={submitHandler} />
+          <View style={styles.list}>
+            <FlatList
+              data={todos}
+              renderItem={({ item }) => (
+                <TodoItem item={item} pressHandler={pressHandler} />
+              )}
+            />
+          </View>
         </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
