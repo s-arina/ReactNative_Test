@@ -6,10 +6,12 @@ import {
   View,
   FlatList,
   TouchableOpacity,
+  Button,
 } from 'react-native';
 import Practice from './components/Practice';
 import Header from './components/Header';
 import TodoItem from './components/TodoItem';
+import AddTodo from './components/AddTodo';
 
 export default function App() {
   const [todos, setTodos] = useState([
@@ -23,18 +25,29 @@ export default function App() {
       return prevTodos.filter((todo) => todo.id !== id);
     });
   };
+
+  const submitHandler = (text) => {
+    setTodos((prevTodos) => {
+      return [...prevTodos, { text: text, id: Math.random().toString() }];
+      // try uuid for key generating
+    });
+  };
+
+  console.log(todos);
   return (
     <View style={styles.container}>
       <StatusBar style='auto' />
       <Header />
-      <View style={styles.content}></View>
-      <View style={styles.list}>
-        <FlatList
-          data={todos}
-          renderItem={({ item }) => (
-            <TodoItem item={item} pressHandler={pressHandler} />
-          )}
-        />
+      <View style={styles.content}>
+        <AddTodo submitHandler={submitHandler} />
+        <View style={styles.list}>
+          <FlatList
+            data={todos}
+            renderItem={({ item }) => (
+              <TodoItem item={item} pressHandler={pressHandler} />
+            )}
+          />
+        </View>
       </View>
     </View>
   );
@@ -50,7 +63,6 @@ const styles = StyleSheet.create({
   },
   list: {
     marginTop: 20,
-    marginHorizontal: 20,
     display: 'flex',
     flexDirection: 'column',
   },
