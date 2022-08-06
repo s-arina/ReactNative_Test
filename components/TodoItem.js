@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Entypo, MaterialIcons } from '@expo/vector-icons';
 
 export default function TodoItem({ item, setTodos, todos }) {
   const [taskComplete, setTaskComplete] = useState(false);
@@ -11,23 +11,40 @@ export default function TodoItem({ item, setTodos, todos }) {
     setTodos(newTodos);
   };
 
+  // mark as complete/incomplete
+  const markTodo = (id) => {
+    const newTodos = todos.map((todo) => {
+      if (todo.id === id) {
+        return { ...todo, completed: !todo.completed };
+      }
+      return todo;
+    });
+    setTodos(newTodos);
+  };
+
+  console.log(todos);
+
   return (
     <TouchableOpacity
       style={styles.items}
       onPress={() => {
-        setTaskComplete(!taskComplete);
+        markTodo(item.id);
       }}
     >
-      <Text style={taskComplete ? styles.itemComplete : styles.item}>
+      <Entypo
+        name={item.completed ? 'check' : 'circle'}
+        size={18}
+        color='#333'
+      />
+      <Text style={item.completed ? styles.itemComplete : styles.item}>
         {item.text}
       </Text>
       <MaterialIcons
         name='delete'
         size={18}
         color='#333'
-        margin={15}
         onPress={() => deleteTodo(item.id)}
-      ></MaterialIcons>
+      />
     </TouchableOpacity>
   );
 }

@@ -52,6 +52,8 @@ export default function App() {
     }
   };
 
+  console.log(todos);
+
   const clearStorage = async () => {
     try {
       await AsyncStorage.clear();
@@ -61,6 +63,7 @@ export default function App() {
       alert('Failed to clear the async storage.');
     }
   };
+
   return (
     <TouchableWithoutFeedback // wrap code in this
       onPress={() => {

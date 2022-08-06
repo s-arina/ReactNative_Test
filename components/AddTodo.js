@@ -13,15 +13,17 @@ import 'react-native-get-random-values';
 export default function AddTodo({ setTodos, todos }) {
   const [text, setText] = useState('');
 
+  // input control
   const changeHandler = (e) => {
     setText(e);
   };
 
+  // add todo, sends info to App.js
   const submitHandler = (text) => {
     if (text) {
       try {
         // adds new todo to list without overwriting and generate a unique id
-        setTodos([...todos, { text, id: uuid() }]);
+        setTodos([...todos, { id: uuid(), text, completed: false }]);
       } catch (e) {
         alert('failed to save data');
       }
@@ -39,8 +41,8 @@ export default function AddTodo({ setTodos, todos }) {
         placeholder='New todo...'
         onChangeText={changeHandler}
       />
-      <Pressable onPress={() => submitHandler(text)}>
-        <Text style={styles.button}>ADD TODO</Text>
+      <Pressable onPress={() => submitHandler(text)} style={styles.button}>
+        <Text style={styles.add}>ADD TODO</Text>
       </Pressable>
     </View>
   );
@@ -63,9 +65,12 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 20,
     backgroundColor: 'coral',
-    textAlign: 'center',
+    borderRadius: 10,
     width: 100,
     padding: 10,
+  },
+  add: {
+    textAlign: 'center',
     color: '#fff',
     fontWeight: 'bold',
   },
