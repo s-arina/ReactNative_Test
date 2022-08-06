@@ -1,29 +1,32 @@
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  Button,
-  Pressable,
-} from 'react-native';
+import { useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
 export default function TodoItem({ item, pressHandler }) {
+  const [taskComplete, setTaskComplete] = useState(false);
+
   return (
-    <View style={styles.item}>
-      <Text>{item.text}</Text>
+    <TouchableOpacity
+      style={styles.items}
+      onPress={() => {
+        setTaskComplete(!taskComplete);
+      }}
+    >
+      <Text style={taskComplete ? styles.itemComplete : styles.item}>
+        {item.text}
+      </Text>
       <MaterialIcons
         name='delete'
         size={18}
         color='#333'
         onPress={() => pressHandler(item.id)}
       ></MaterialIcons>
-    </View>
+    </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  item: {
+  items: {
     padding: 16,
     marginTop: 16,
     borderColor: '#bbb',
@@ -35,7 +38,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  close: {
-    color: 'grey',
+  item: {
+    textDecorationLine: 'none',
+  },
+  itemComplete: {
+    textDecorationLine: 'line-through',
   },
 });

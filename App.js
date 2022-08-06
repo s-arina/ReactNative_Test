@@ -2,11 +2,8 @@ import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import {
   StyleSheet,
-  Text,
   View,
   FlatList,
-  TouchableOpacity,
-  Button,
   Alert,
   TouchableWithoutFeedback,
   Keyboard,
@@ -29,20 +26,8 @@ export default function App() {
     });
   };
 
-  const submitHandler = (text) => {
-    if (text) {
-      setTodos((prevTodos) => {
-        return [...prevTodos, { text: text, id: Math.random().toString() }];
-        // try uuid for key generating
-      });
-    } else {
-      Alert.alert('Oops!', 'Task cannot be empty.', [
-        { text: 'OK', onPress: () => console.log('alert closed') },
-      ]);
-    }
-  };
-
   console.log(todos);
+
   return (
     <TouchableWithoutFeedback // wrap code in this
       onPress={() => {
@@ -53,7 +38,7 @@ export default function App() {
         <StatusBar style='auto' />
         <Header />
         <View style={styles.content}>
-          <AddTodo submitHandler={submitHandler} />
+          <AddTodo setTodos={setTodos} />
           <View style={styles.list}>
             <FlatList
               data={todos}
@@ -75,10 +60,11 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 40,
+    flex: 1,
   },
   list: {
-    marginTop: 20,
     display: 'flex',
     flexDirection: 'column',
+    flex: 1,
   },
 });
