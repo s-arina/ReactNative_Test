@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import {
   StyleSheet,
   View,
   FlatList,
-  Alert,
+  Button,
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
@@ -12,20 +12,55 @@ import Practice from './components/Practice';
 import Header from './components/Header';
 import TodoItem from './components/TodoItem';
 import AddTodo from './components/AddTodo';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
-  const [todos, setTodos] = useState([
-    { text: 'buy coffee', id: 0 },
-    { text: 'create an app', id: 1 },
-    { text: 'play on the switch', id: 2 },
-  ]);
+  const [todos, setTodos] = useState([]);
+  const asyncStorageKey = '@todos'; // storage key name variable
 
-  const pressHandler = (id) => {
-    setTodos((prevTodos) => {
-      return prevTodos.filter((todo) => todo.id !== id);
-    });
+  useEffect(() => {
+    fetchData();
+    // get data each time app is loaded
+  }, []);
+
+  useEffect(() => {
+    storeInAsync(todos);
+    // updates whenever todos are updated
+  }, [todos]);
+
+  const storeInAsync = async (todos) => {
+    try {
+      const stringifiedTodos = JSON.stringify(todos);
+      // stringify todos object
+      AsyncStorage.setItem(asyncStorageKey, stringifiedTodos);
+      // add it to storage .setItem(key, name)
+    } catch (e) {
+      console.log('problem storing todos');
+    }
   };
 
+  const fetchData = async () => {
+    try {
+      const todos = await AsyncStorage.getItem(asyncStorageKey);
+      // get data by key name
+      if (todos) {
+        setTodos(JSON.parse(todos));
+        // if it exists, parse the data back to an object
+      }
+    } catch (e) {
+      alert('failed to fetch data');
+    }
+  };
+
+  const clearStorage = async () => {
+    try {
+      await AsyncStorage.clear();
+      // clears storage
+      alert('Storage successfully cleared!');
+    } catch (e) {
+      alert('Failed to clear the async storage.');
+    }
+  };
   return (
     <TouchableWithoutFeedback // wrap code in this
       onPress={() => {
@@ -36,15 +71,20 @@ export default function App() {
         <StatusBar style='auto' />
         <Header />
         <View style={styles.content}>
-          <AddTodo setTodos={setTodos} />
+          <AddTodo
+            setTodos={setTodos}
+            todos={todos}
+            asyncStorageKey={asyncStorageKey}
+          />
           <View style={styles.list}>
             <FlatList
               data={todos}
               renderItem={({ item }) => (
-                <TodoItem item={item} setTodos={setTodos} />
+                <TodoItem item={item} todos={todos} setTodos={setTodos} />
               )}
             />
           </View>
+          <Button title='Clear all' onPress={clearStorage} />
         </View>
       </View>
     </TouchableWithoutFeedback>

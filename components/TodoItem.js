@@ -2,14 +2,13 @@ import { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
-export default function TodoItem({ item, setTodos }) {
+export default function TodoItem({ item, setTodos, todos }) {
   const [taskComplete, setTaskComplete] = useState(false);
 
-  const pressHandler = (id) => {
-    // deleting a todo
-    setTodos((prevTodos) => {
-      return prevTodos.filter((todo) => todo.id !== id);
-    });
+  // delete todo
+  const deleteTodo = (id) => {
+    const newTodos = todos.filter((todo) => todo.id !== id);
+    setTodos(newTodos);
   };
 
   return (
@@ -27,7 +26,7 @@ export default function TodoItem({ item, setTodos }) {
         size={18}
         color='#333'
         margin={15}
-        onPress={() => pressHandler(item.id)}
+        onPress={() => deleteTodo(item.id)}
       ></MaterialIcons>
     </TouchableOpacity>
   );

@@ -10,7 +10,7 @@ import {
 import { v4 as uuid } from 'uuid';
 import 'react-native-get-random-values';
 
-export default function AddTodo({ setTodos }) {
+export default function AddTodo({ setTodos, todos }) {
   const [text, setText] = useState('');
 
   const changeHandler = (e) => {
@@ -19,9 +19,12 @@ export default function AddTodo({ setTodos }) {
 
   const submitHandler = (text) => {
     if (text) {
-      setTodos((prevTodos) => {
-        return [...prevTodos, { text: text, id: uuid() }];
-      });
+      try {
+        // adds new todo to list without overwriting and generate a unique id
+        setTodos([...todos, { text, id: uuid() }]);
+      } catch (e) {
+        alert('failed to save data');
+      }
     } else {
       Alert.alert('Oops!', 'Task cannot be empty.', [{ text: 'OK' }]);
     }
