@@ -26,8 +26,6 @@ export default function App() {
     });
   };
 
-  console.log(todos);
-
   return (
     <TouchableWithoutFeedback // wrap code in this
       onPress={() => {
@@ -43,7 +41,7 @@ export default function App() {
             <FlatList
               data={todos}
               renderItem={({ item }) => (
-                <TodoItem item={item} pressHandler={pressHandler} />
+                <TodoItem item={item} setTodos={setTodos} />
               )}
             />
           </View>

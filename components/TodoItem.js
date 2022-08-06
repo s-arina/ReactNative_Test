@@ -2,8 +2,15 @@ import { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
-export default function TodoItem({ item, pressHandler }) {
+export default function TodoItem({ item, setTodos }) {
   const [taskComplete, setTaskComplete] = useState(false);
+
+  const pressHandler = (id) => {
+    // deleting a todo
+    setTodos((prevTodos) => {
+      return prevTodos.filter((todo) => todo.id !== id);
+    });
+  };
 
   return (
     <TouchableOpacity
@@ -19,6 +26,7 @@ export default function TodoItem({ item, pressHandler }) {
         name='delete'
         size={18}
         color='#333'
+        margin={15}
         onPress={() => pressHandler(item.id)}
       ></MaterialIcons>
     </TouchableOpacity>
@@ -40,8 +48,10 @@ const styles = StyleSheet.create({
   },
   item: {
     textDecorationLine: 'none',
+    maxWidth: '90%',
   },
   itemComplete: {
     textDecorationLine: 'line-through',
+    maxWidth: '90%',
   },
 });
