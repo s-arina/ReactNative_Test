@@ -21,9 +21,6 @@ export default function Practice() {
     setPeople((prevPeople) => {
       return prevPeople.filter((person) => person.id !== id);
     });
-    // returns a new array so state is not mutated
-
-    console.log(id);
   };
 
   console.log(people);

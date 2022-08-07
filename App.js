@@ -7,6 +7,7 @@ import {
   Button,
   TouchableWithoutFeedback,
   Keyboard,
+  Alert,
 } from 'react-native';
 import Practice from './components/Practice';
 import Header from './components/Header';
@@ -18,16 +19,17 @@ export default function App() {
   const [todos, setTodos] = useState([]);
   const asyncStorageKey = '@todos'; // storage key name variable
 
+  // get data each time app is loaded
   useEffect(() => {
     fetchData();
-    // get data each time app is loaded
   }, []);
 
+  // updates whenever todos are updated
   useEffect(() => {
     storeInAsync(todos);
-    // updates whenever todos are updated
   }, [todos]);
 
+  // async storage
   const storeInAsync = async (todos) => {
     try {
       const stringifiedTodos = JSON.stringify(todos);
@@ -39,6 +41,7 @@ export default function App() {
     }
   };
 
+  // fetch data from async storage
   const fetchData = async () => {
     try {
       const todos = await AsyncStorage.getItem(asyncStorageKey);
@@ -52,16 +55,15 @@ export default function App() {
     }
   };
 
-  console.log(todos);
-
-  const clearStorage = async () => {
-    try {
-      await AsyncStorage.clear();
-      // clears storage
-      alert('Storage successfully cleared!');
-    } catch (e) {
-      alert('Failed to clear the async storage.');
-    }
+  // clear all todos
+  const clearStorage = () => {
+    Alert.alert('Confirm', 'Clear all todos?', [
+      {
+        text: 'Yes',
+        onPress: () => setTodos([]),
+      },
+      { text: 'No' },
+    ]);
   };
 
   return (
